@@ -1,0 +1,17 @@
+{
+  "name": "task-api",
+  "version": "1.0.0",
+  "main": "routes.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": "",
+  "dependencies": {
+    "date-fns": "^4.1.0"
+  }
+}
