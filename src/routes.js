@@ -78,6 +78,23 @@ export const routes = [
     },
   },
   {
+    method: "DELETE",
+    path: buildRoutePath("/tasks"),
+    handler: (req, res) => {
+      const tasks = database.select("tasks");
+
+      if (tasks.length === 0) {
+        return res
+          .writeHead(404, { "Content-Type": "application/json" })
+          .end(JSON.stringify({ error: "No tasks found to delete" }));
+      } else {
+        database.deleteAll("tasks");
+      }
+
+      return res.writeHead(204).end();
+    },
+  },
+  {
     method: "PUT",
     path: buildRoutePath("/tasks/:id"),
     handler: (req, res) => {
@@ -116,6 +133,47 @@ export const routes = [
       return res.writeHead(200, { "Content-Type": "application/json" }).end(
         JSON.stringify({
           message: "Task updated successfully",
+          data: updatedTask,
+        })
+      );
+    },
+  },
+  {
+    method: "PATCH",
+    path: buildRoutePath("/tasks/:id/completed"),
+    handler: (req, res) => {
+      const { id } = req.params;
+      const { completed } = req.body;
+
+      const existingTask = database
+        .select("tasks")
+        .find((task) => task.id === id);
+
+      if (!existingTask) {
+        return res
+          .writeHead(404, { "Content-Type": "application/json" })
+          .end(JSON.stringify({ error: "Task not found" }));
+      }
+
+      if (typeof completed !== "boolean") {
+        return res.writeHead(400, { "Content-Type": "application/json" }).end(
+          JSON.stringify({
+            error: "Completed status must be a boolean value",
+          })
+        );
+      }
+
+      const updatedTask = {
+        ...existingTask,
+        completed_at: completed ? add(new Date(), { hours: -3 }) : null,
+        updated_at: add(new Date(), { hours: -3 }),
+      };
+
+      database.update("tasks", id, updatedTask);
+
+      return res.writeHead(200, { "Content-Type": "application/json" }).end(
+        JSON.stringify({
+          message: "Task status updated successfully",
           data: updatedTask,
         })
       );
