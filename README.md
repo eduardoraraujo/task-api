@@ -20,6 +20,8 @@ Uma API RESTful desenvolvida com Node.js para gerenciamento de tarefas, permitin
 
 ## 📄 Documentação da API
 
+![Photo](./src/apidog-doc.png)
+
 A documentação completa da API está disponível em: [https://apidog.com/apidoc/shared/6bcd62ee-fcaf-4ac4-b409-b9d7603692a5](https://apidog.com/apidoc/shared/6bcd62ee-fcaf-4ac4-b409-b9d7603692a5)
 
 ## ⚙️ Instalação e Execução
