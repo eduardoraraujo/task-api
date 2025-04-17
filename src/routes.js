@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Database } from "./middlewares/database.js";
 import { buildRoutePath } from "./utils/build-route-path.js";
 import { add } from "date-fns";
+import { importTasks } from "./utils/import-tasks.js";
 
 const database = new Database();
 
@@ -24,6 +25,12 @@ export const routes = [
     method: "POST",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
+      const contentType = req.headers["content-type"];
+
+      if (contentType === "text/csv") {
+        return importTasks(req, res, database);
+      }
+
       const { title, description, completed_at, created_at, updated_at } =
         req.body;
 

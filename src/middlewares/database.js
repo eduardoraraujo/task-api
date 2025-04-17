@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const databasePath = new URL("../db.json", import.meta.url);
 
@@ -6,20 +6,21 @@ export class Database {
   #database = {};
 
   constructor() {
-    fs.readFile(databasePath, "utf-8")
-      .then((data) => {
-        this.#database = JSON.parse(data);
-      })
-      .catch(() => {
-        this.#persist();
-      });
+    this.#readDatabase();
+  }
+
+  #readDatabase() {
+    const data = readFileSync(databasePath, "utf-8");
+    this.#database = JSON.parse(data);
   }
 
   #persist() {
-    fs.writeFile(databasePath, JSON.stringify(this.#database));
+    writeFileSync(databasePath, JSON.stringify(this.#database));
   }
 
-  select(table, search) {
+  select(table) {
+    this.#readDatabase();
+
     let data = this.#database[table] ?? [];
 
     return data;
